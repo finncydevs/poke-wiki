@@ -24,7 +24,7 @@ const fetchPokemon = async () => {
       image: pokemon.sprites.other["official-artwork"].front_default,
     }));
   } catch (error) {
-    console.error("Error fetching Pokémon data:", error);
+    console.error("Error fetching data:", error);
   }
 };
 

@@ -1,10 +1,9 @@
 <template>
   <div class="navbar absolute py-4 bg-base-100 px-6">
     <div class="flex items-center justify-between w-full">
-      <a href="#" class="text-2xl font-bold">PokeWiki</a>
+      <a href="/" class="text-2xl font-bold">PokeWiki</a>
 
-      <!-- Wrap in a div and use flex to align -->
-      <div class="flex items-center bg-slate-200 py-1 px-2 rounded-md">
+      <div class="flex items-center bg-slate-500 py-1 px-2 rounded-md">
         <p class="text-lg font-semibold text-slate-900">1 Catch</p>
         <img class="poke ml-2" src="/icon.png" alt="Pokeball Icon" />
       </div>
