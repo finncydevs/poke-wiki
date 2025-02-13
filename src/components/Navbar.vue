@@ -13,7 +13,7 @@
           <img class="poke ml-2" src="/icon.png" alt="Pokeball Icon" />
         </div>
       </router-link>
-      <a href="pokemon.com" target="_blank">
+      <a href="https://pokemon.com" target="_blank">
         <img src="../assets/poke.png" class="w-[105px]" alt="pokemon" />
       </a>
     </div>

@@ -47,7 +47,7 @@ const filteredPokemon = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col md:flex-row items-center justify-between px-4 py-2">
+  <div class="flex flex-col md:flex-row items-center justify-center px-4 py-2">
     <input
       type="search"
       v-model="query"
@@ -75,7 +75,7 @@ const filteredPokemon = computed(() => {
 
       <img
         :src="pokemon.image"
-        alt="Pokemon"
+        :alt="pokemon.name"
         class="relative w-64 h-64 object-contain z-10"
       />
 
@@ -95,9 +95,11 @@ const filteredPokemon = computed(() => {
     </button>
     <p class="mt-2 text-gray-600">
       Made by Jindan AKA Finn with
-      <a class="text-green-600" target="_blank" href="vuejs.org">VueJS</a>
+      <a class="text-green-600" target="_blank" href="https://vuejs.org/"
+        >VueJS</a
+      >
       and
-      <a class="text-blue-600" target="_blank" href="tailwindcss.com"
+      <a class="text-blue-600" target="_blank" href="https://tailwindcss.com"
         >Tailwindcss</a
       >
     </p>
