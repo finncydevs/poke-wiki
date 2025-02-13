@@ -1,11 +1,12 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 
 const pokemonList = ref([]);
 const showCount = ref(15);
-const totalPokemon = ref(50); // Set dynamically if needed
+const totalPokemon = ref(1025);
 const router = useRouter();
+const query = ref("");
 
 const fetchPokemon = async () => {
   try {
@@ -35,22 +36,49 @@ const showMore = () => {
     showCount.value += 5;
   }
 };
+
+const filteredPokemon = computed(() => {
+  return pokemonList.value
+    .filter((pokemon) =>
+      pokemon.name.toLowerCase().includes(query.value.toLowerCase())
+    )
+    .slice(0, showCount.value);
+});
 </script>
 
 <template>
+  <div class="flex flex-col md:flex-row items-center justify-between px-4 py-2">
+    <input
+      type="search"
+      v-model="query"
+      class="p-2 border-gray-600 text-gray-400 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600 w-full md:w-1/3"
+      placeholder="Search Pokémon..."
+    />
+  </div>
+
   <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
     <div
       @click="router.push(`/pokemon/${pokemon.id}`)"
-      v-for="pokemon in pokemonList.slice(0, showCount)"
+      v-for="pokemon in filteredPokemon"
       :key="pokemon.id"
-      class="bg-gray-800 hover:ring-4 transition ease-in-out hover:-translate-y-2 shadow-lg rounded-xl p-4 flex flex-col items-center"
+      class="relative bg-gray-800 hover:ring-4 transition ease-in-out hover:-translate-y-2 shadow-lg rounded-xl p-4 flex flex-col items-center"
     >
-      <div class="text-gray-500 text-sm font-semibold">#000{{ pokemon.id }}</div>
+      <div class="text-gray-500 text-sm font-semibold">
+        #{{ pokemon.id.toString().padStart(4, "0") }}
+      </div>
+
+      <img
+        src="/backPoke.png"
+        alt="Background"
+        class="absolute inset-0 w-full h-full object-contain opacity-25"
+      />
+
       <img
         :src="pokemon.image"
         alt="Pokemon"
-        class="w-64 h-64 object-contain"
+        class="relative w-64 h-64 object-contain z-10"
       />
+
       <h1 class="text-xl font-bold text-slate-300 mt-2 capitalize">
         {{ pokemon.name }}
       </h1>
@@ -61,10 +89,17 @@ const showMore = () => {
     <button
       @click="showMore"
       :disabled="showCount >= totalPokemon"
-      class="bg-gray-400 rounded-lg py-2 px-4 text-xl font-semibold text-slate-900 hover:bg-gray-500 transition disabled:opacity-50 disabled:cursor-not-allowed"
+      class="bg-slate-500 rounded-lg py-2 px-4 text-xl font-semibold text-slate-900 hover:bg-slate-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
     >
       Show more..
     </button>
-    <p class="mt-2 text-gray-600">All right is alright</p>
+    <p class="mt-2 text-gray-600">
+      Made by Jindan AKA Finn with
+      <a class="text-green-600" target="_blank" href="vuejs.org">VueJS</a>
+      and
+      <a class="text-blue-600" target="_blank" href="tailwindcss.com"
+        >Tailwindcss</a
+      >
+    </p>
   </footer>
 </template>

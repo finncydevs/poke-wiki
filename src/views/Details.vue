@@ -124,11 +124,11 @@ watch(() => route.params.id, fetchPokemonDetail, { immediate: true });
           @click="catchPokemon"
           class="btn mt-4 bg-red-500 font-semibold text-white py-2 px-5 rounded-lg shadow-md hover:bg-red-600 transition flex items-center gap-2"
           :class="{
-            'bg-slate-400 animate-spin cursor-not-allowed': isCatching,
+            'bg-red-600  px-5 cursor-not-allowed': isCatching,
           }"
         >
           <img src="/icon.png" class="animate-bounce w-8 h-8" alt="" />
-          Catch {{ pokemon.name }}
+          {{ isCatching ? "Catching..." : `Catch ${pokemon.name}` }}
         </button>
       </div>
 
@@ -148,7 +148,7 @@ watch(() => route.params.id, fetchPokemonDetail, { immediate: true });
           </button>
           <div v-if="caughtMessage.success" class="animate-fadeIn">
             <h2 class="text-xl font-semibold text-green-600">
-              Horeee dapet {{ caughtMessage.pokemon.name }}!
+              Kamu dapat {{ caughtMessage.pokemon.name }}!
             </h2>
             <img
               :src="caughtMessage.pokemon.image"
@@ -164,7 +164,7 @@ watch(() => route.params.id, fetchPokemonDetail, { immediate: true });
           </div>
           <div v-else class="animate-fadeIn">
             <h2 class="text-xl font-semibold text-red-600">
-              Pokémon mu kabur...
+              Pokemon mu kabur...
             </h2>
           </div>
           <button
@@ -189,14 +189,14 @@ watch(() => route.params.id, fetchPokemonDetail, { immediate: true });
           <button
             @click="activeTab = 'stats'"
             :class="activeTab === 'stats' ? 'bg-yellow-400' : 'bg-gray-200'"
-            class="px-3 rounded-md text-gray-800"
+            class="px-3 rounded-md text-gray-800 font-semibold"
           >
             Stats
           </button>
           <button
             @click="activeTab = 'moves'"
             :class="activeTab === 'moves' ? 'bg-yellow-400' : 'bg-gray-200'"
-            class="px-3 py-1 rounded-md text-gray-800"
+            class="px-3 py-1 rounded-md text-gray-800 font-semibold"
           >
             Moves
           </button>
@@ -232,7 +232,8 @@ watch(() => route.params.id, fetchPokemonDetail, { immediate: true });
             <strong>Experience:</strong> {{ pokemon.experience }} Exp
           </p>
         </div>
-        <div v-if="activeTab === 'moves'" class="mt-4">
+        <!--Moves-->
+        <div v-if="activeTab === 'moves'" class="mt-4 space-y-4">
           <div
             class="grid grid-cols-2 max-h-[300px] overflow-y-auto p-2 md:grid-cols-3 gap-4"
           >
@@ -245,6 +246,7 @@ watch(() => route.params.id, fetchPokemonDetail, { immediate: true });
             </span>
           </div>
         </div>
+        <!--Stats-->
         <div v-if="activeTab === 'stats'" class="mt-4 space-y-2">
           <div v-for="stat in pokemon.stats" :key="stat.stat.name">
             <p class="text-gray-400 font-semibold">

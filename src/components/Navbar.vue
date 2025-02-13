@@ -4,15 +4,18 @@
       <router-link to="/" class="text-2xl font-bold">PokeWiki</router-link>
 
       <router-link to="/capture">
-        <div class="flex items-center bg-slate-500 py-1 px-3 rounded-md">
+        <div
+          class="flex items-center bg-slate-500 py-1 lg:py-1 px-3 rounded-md"
+        >
           <span class="text-slate-900 font-semibold"
             >{{ caughtCount }} Captured</span
           >
           <img class="poke ml-2" src="/icon.png" alt="Pokeball Icon" />
         </div>
       </router-link>
-
-      <img src="../assets/poke.png" class="w-[105px]" alt="pokemon" />
+      <a href="pokemon.com" target="_blank">
+        <img src="../assets/poke.png" class="w-[105px]" alt="pokemon" />
+      </a>
     </div>
   </div>
 </template>
