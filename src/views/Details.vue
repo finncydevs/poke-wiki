@@ -18,7 +18,7 @@ const fetchPokemonDetail = async () => {
 
   try {
     const res = await fetch(
-      `https://pokeapi.co/api/v2/pokemon/${route.params.id}`
+      `https://pokeapi.co/api/v2/pokemon/${route.params.name}`
     );
     if (!res.ok) throw new Error("Gagal fetching data");
     const data = await res.json();
@@ -87,7 +87,7 @@ const closeMessage = () => {
   caughtMessage.value = null;
 };
 
-watch(() => route.params.id, fetchPokemonDetail, { immediate: true });
+watch(() => route.params.name, fetchPokemonDetail, { immediate: true });
 </script>
 
 <template>
@@ -148,7 +148,7 @@ watch(() => route.params.id, fetchPokemonDetail, { immediate: true });
           </button>
           <div v-if="caughtMessage.success" class="animate-fadeIn">
             <h2 class="text-xl font-semibold text-blue-600">
-              Kamu dapat {{ caughtMessage.pokemon.name }}!
+              You get a {{ caughtMessage.pokemon.name }}!
             </h2>
             <img
               :src="caughtMessage.pokemon.image"
@@ -164,7 +164,7 @@ watch(() => route.params.id, fetchPokemonDetail, { immediate: true });
           </div>
           <div v-else class="animate-fadeIn">
             <h2 class="text-xl font-semibold text-red-600">
-              Pokemon mu kabur...
+              Your pokemon runs away!...
             </h2>
           </div>
           <button
@@ -251,7 +251,7 @@ watch(() => route.params.id, fetchPokemonDetail, { immediate: true });
             <div class="w-full bg-secondary rounded-full h-3">
               <div
                 class="bg-blue-600 h-3 rounded-full transition-all duration-300"
-                :style="{ width: stat.base_stat + '%' }"
+                :style="{ width: `clamp(0%, ${stat.base_stat}%, 100%)` }"
               ></div>
             </div>
           </div>

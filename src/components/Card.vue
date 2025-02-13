@@ -58,7 +58,7 @@ const filteredPokemon = computed(() => {
 
   <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
     <div
-      @click="router.push(`/pokemon/${pokemon.id}`)"
+      @click="router.push(`/pokemon/${pokemon.name}`)"
       v-for="pokemon in filteredPokemon"
       :key="pokemon.id"
       class="relative bg-primary hover:ring-4 transition ease-in-out hover:-translate-y-2 shadow-lg rounded-xl p-4 flex flex-col items-center"
@@ -70,7 +70,7 @@ const filteredPokemon = computed(() => {
       <img
         src="/backPoke.png"
         alt="Background"
-        class="absolute inset-0 w-full h-full object-contain opacity-50"
+        class="absolute inset-0 w-full h-full object-contain opacity-50 pointer-events-none"
       />
 
       <img
@@ -79,7 +79,7 @@ const filteredPokemon = computed(() => {
         class="relative w-64 h-64 object-contain z-10"
       />
 
-      <h1 class="text-xl font-bold text-slate-300 mt-2 capitalize">
+      <h1 class="text-xl font-bold z-40 text-teks mt-2 capitalize">
         {{ pokemon.name }}
       </h1>
     </div>

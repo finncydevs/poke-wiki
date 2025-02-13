@@ -8,6 +8,9 @@ export default {
         secondary: "#1C212A",
         teks: "#CED2D8",
       },
+      fontFamily: {
+        sans: ['inter', 'sans-serif']
+      }
     },
   },
   plugins: [require("daisyui")],

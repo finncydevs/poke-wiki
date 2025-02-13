@@ -1,7 +1,7 @@
 <template>
   <div class="navbar bg-primary absolute py-4 px-6 w-full">
     <div class="flex items-center justify-between w-full">
-      <router-link to="/" class="text-2xl font-bold tet-teks"
+      <router-link to="/" class="font-sans text-2xl font-bold tet-teks"
         >PokeWiki</router-link
       >
 
