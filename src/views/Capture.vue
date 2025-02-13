@@ -28,7 +28,7 @@ const confirmDelete = (pokemon) => {
 
 <template>
   <Navbar />
-  <div class="p-6" id="backgr">
+  <div class="p-6 min-h-screen" id="backgr">
     <h1 class="text-3xl font-bold text-center text-white">Captured Pokemon</h1>
 
     <div
