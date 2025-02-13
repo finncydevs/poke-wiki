@@ -209,7 +209,7 @@ watch(() => route.params.id, fetchPokemonDetail, { immediate: true });
             <span
               v-for="type in pokemon.types"
               :key="type"
-              class="px-2 py-1 bg-sky-600 text-teks rounded-full mx-1 text-sm capitalize"
+              class="px-2 py-1 bg-blue-600 text-teks rounded-full mx-1 text-sm capitalize"
               >{{ type }}</span
             >
           </p>

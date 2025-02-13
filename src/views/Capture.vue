@@ -30,12 +30,11 @@ const confirmDelete = (pokemon) => {
   <Navbar />
   <div class="p-6 min-h-screen" id="backgr">
     <h1 class="text-3xl font-bold text-center text-white">Captured Pokemon</h1>
-
     <div
       v-if="capturedPokemon.length === 0"
-      class="mt-4 text- tekstext-center"
+      class="mt-4 text-teks text-xl text-center flex justify-center items-center h-full"
     >
-      kamu belum menangkap pokemon
+     Maaf, kamu belum menangkap pokemon
     </div>
 
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-6">

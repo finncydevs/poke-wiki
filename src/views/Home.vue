@@ -8,7 +8,7 @@ import Card from "@/components/Card.vue";
     <Navbar />
   </header>
 
-  <main class="pt-24">
+  <main class="pt-24 min-h-screen">
     <Card />
   </main>
 </template>
