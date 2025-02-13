@@ -51,7 +51,7 @@ const filteredPokemon = computed(() => {
     <input
       type="search"
       v-model="query"
-      class="p-2 border-gray-600 text-gray-400 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600 w-full md:w-1/3"
+      class="p-2 border-gray-800 text-gray-500 bg-primary border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600 w-full md:w-1/3"
       placeholder="Search Pokémon..."
     />
   </div>
@@ -61,16 +61,16 @@ const filteredPokemon = computed(() => {
       @click="router.push(`/pokemon/${pokemon.id}`)"
       v-for="pokemon in filteredPokemon"
       :key="pokemon.id"
-      class="relative bg-gray-800 hover:ring-4 transition ease-in-out hover:-translate-y-2 shadow-lg rounded-xl p-4 flex flex-col items-center"
+      class="relative bg-primary hover:ring-4 transition ease-in-out hover:-translate-y-2 shadow-lg rounded-xl p-4 flex flex-col items-center"
     >
-      <div class="text-gray-500 text-sm font-semibold">
+      <div class="text-teks text-sm font-semibold">
         #{{ pokemon.id.toString().padStart(4, "0") }}
       </div>
 
       <img
         src="/backPoke.png"
         alt="Background"
-        class="absolute inset-0 w-full h-full object-contain opacity-25"
+        class="absolute inset-0 w-full h-full object-contain opacity-50"
       />
 
       <img
@@ -89,7 +89,7 @@ const filteredPokemon = computed(() => {
     <button
       @click="showMore"
       :disabled="showCount >= totalPokemon"
-      class="bg-slate-500 rounded-lg py-2 px-4 text-xl font-semibold text-slate-900 hover:bg-slate-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+      class="bg-secondary rounded-lg py-2 px-4 text-xl font-semibold text-teks hover:bg-gray-900 transition disabled:opacity-50 disabled:cursor-not-allowed"
     >
       Show more..
     </button>
