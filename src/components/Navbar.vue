@@ -1,7 +1,9 @@
 <template>
   <div class="navbar bg-primary absolute py-4 px-6 w-full">
     <div class="flex items-center justify-between w-full">
-      <router-link to="/" class="text-2xl font-bold text-teks">PokeWiki</router-link>
+      <router-link to="/" class="text-2xl font-bold tet-teks"
+        >PokeWiki</router-link
+      >
 
       <router-link to="/capture">
         <div
@@ -10,7 +12,7 @@
           <span class="text-teks font-semibold"
             >{{ caughtCount }} Captured</span
           >
-          <img class="poke ml-2" src="/icon.png" alt="Pokeball Icon" />
+          <img class="poke ml-2" src="/poke.png" alt="Pokeball Icon" />
         </div>
       </router-link>
       <a href="https://pokemon.com" target="_blank">
