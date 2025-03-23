@@ -26,7 +26,7 @@ const caughtCount = ref(0);
 
 async function fetchCaughtCount() {
   try {
-    const res = await fetch("https://nest-pokemon-production-2036.up.railway.app/pokemons/caught/count");
+    const res = await fetch("https://nest-pokemon-mongo.up.railway.app/pokemons/caught/count");
     if (!res.ok) throw new Error("Failed to fetch caught count");
     const data = await res.json();
     caughtCount.value = data.caughtCount;

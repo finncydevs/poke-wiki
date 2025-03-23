@@ -24,7 +24,7 @@ const fetchPokemonDetail = async () => {
   try {
     console.log(route.params.id);
     const res = await fetch(
-      `https://nest-pokemon-production-2036.up.railway.app/pokemons/${route.params.id}`
+      `https://nest-pokemon-mongo.up.railway.app/pokemons/${route.params.id}`
     );
     if (!res.ok) throw new Error("Gagal fetching data");
     const data = await res.json();
@@ -73,7 +73,7 @@ const catchPokemon = async () => {
     if (success) {
       try {
         const res = await fetch(
-          `https://nest-pokemon-production-2036.up.railway.app/pokemons/${route.params.id}`,
+          `https://nest-pokemon-mongo.up.railway.app/pokemons/${route.params.id}`,
           {
             method: "PATCH",
             headers: {
