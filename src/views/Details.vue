@@ -26,7 +26,7 @@ const fetchPokemonDetail = async () => {
     // Misalnya, kita ambil data berdasarkan ID dari route.params.id
     console.log(route.params.id);
     const res = await fetch(
-      `http://localhost:5000/pokemons/${route.params.id}`
+      `https://nest-pokemon-production-c1f9.up.railway.app/pokemons/${route.params.id}`
     );
     if (!res.ok) throw new Error("Gagal fetching data");
     const data = await res.json();
@@ -77,7 +77,7 @@ const catchPokemon = async () => {
     if (success) {
       try {
         const res = await fetch(
-          `http://localhost:5000/pokemons/${route.params.id}`,
+          `https://nest-pokemon-production-c1f9.up.railway.app/pokemons/${route.params.id}`,
           {
             method: "PATCH",
             headers: {

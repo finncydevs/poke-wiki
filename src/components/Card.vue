@@ -9,7 +9,7 @@ const query = ref("");
 
 const fetchPokemon = async () => {
   try {
-    const res = await fetch("http://localhost:5000/pokemons");
+    const res = await fetch("https://nest-pokemon-production-c1f9.up.railway.app/pokemons");
     if (!res.ok) throw new Error("Failed fetching data");
 
     const data = await res.json();

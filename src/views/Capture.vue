@@ -15,7 +15,7 @@ const fetchCaughtPokemon = async () => {
   isLoading.value = true;
   errorMessage.value = "";
   try {
-    const res = await fetch("http://localhost:5000/pokemons/caught");
+    const res = await fetch("https://nest-pokemon-production-c1f9.up.railway.app/pokemons/caught");
     if (!res.ok) throw new Error("Failed fetching caught Pokémon data");
     const data = await res.json();
     caughtPokemon.value = data;
@@ -41,7 +41,7 @@ const deletePokemon = async () => {
   if (!selectedPokemon.value) return;
   try {
     const res = await fetch(
-      `http://localhost:5000/pokemons/${selectedPokemon.value.pokeId}`,
+      `https://nest-pokemon-production-c1f9.up.railway.app/${selectedPokemon.value.pokeId}`,
       {
         method: "DELETE",
       }
