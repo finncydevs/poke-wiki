@@ -13,7 +13,6 @@ const activeTab = ref("about");
 const isCatching = ref(false);
 const caughtMessage = ref(null);
 
-// Fungsi untuk capitalize string
 const capitalize = (text) =>
   text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 
@@ -23,15 +22,12 @@ const fetchPokemonDetail = async () => {
   errorMessage.value = "";
 
   try {
-    // Misalnya, kita ambil data berdasarkan ID dari route.params.id
     console.log(route.params.id);
     const res = await fetch(
-      `https://nest-pokemon-production-c1f9.up.railway.app/pokemons/${route.params.id}`
+      `https://nest-pokemon-production-2036.up.railway.app/pokemons/${route.params.id}`
     );
     if (!res.ok) throw new Error("Gagal fetching data");
     const data = await res.json();
-
-    // Hitung rata-rata stats
     const totalStats = data.stats.reduce(
       (sum, stat) => sum + stat.base_stat,
       0
@@ -77,7 +73,7 @@ const catchPokemon = async () => {
     if (success) {
       try {
         const res = await fetch(
-          `https://nest-pokemon-production-c1f9.up.railway.app/pokemons/${route.params.id}`,
+          `https://nest-pokemon-production-2036.up.railway.app/pokemons/${route.params.id}`,
           {
             method: "PATCH",
             headers: {
@@ -144,13 +140,13 @@ watch(() => route.params.id, fetchPokemonDetail, { immediate: true });
           #{{ pokemon.id }} {{ pokemon.name }}
         </h1>
         <button
-          :disabled="isCatching "
+          :disabled="isCatching"
           @click="catchPokemon"
           class="btn mt-4 font-bold text-teks py-2 px-5 rounded-lg shadow-md transition flex items-center gap-2"
           :class="{
             'bg-green-700 hover:bg-green-800': pokemon.caught,
             'bg-blue-600 hover:bg-blue-700': !pokemon.caught,
-            'cursor-not-allowed ': isCatching ,
+            'cursor-not-allowed ': isCatching,
           }"
         >
           {{
