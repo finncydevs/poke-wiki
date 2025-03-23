@@ -2,7 +2,9 @@
 import { ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import Navbar from "@/components/Navbar.vue";
+import { useToast } from "vue-toastification";
 
+const toast = useToast();
 const route = useRoute();
 const pokemon = ref(null);
 const isLoading = ref(true);
@@ -10,38 +12,51 @@ const errorMessage = ref("");
 const activeTab = ref("about");
 const isCatching = ref(false);
 const caughtMessage = ref(null);
-let capturedPokemon = JSON.parse(localStorage.getItem("pokemonList")) || [];
 
+// Fungsi untuk capitalize string
+const capitalize = (text) =>
+  text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+
+// Fungsi untuk fetch data Pokémon dari backend
 const fetchPokemonDetail = async () => {
   isLoading.value = true;
   errorMessage.value = "";
 
   try {
+    // Misalnya, kita ambil data berdasarkan ID dari route.params.id
+    console.log(route.params.id);
     const res = await fetch(
-      `https://pokeapi.co/api/v2/pokemon/${route.params.name}`
+      `http://localhost:5000/pokemons/${route.params.id}`
     );
     if (!res.ok) throw new Error("Gagal fetching data");
     const data = await res.json();
+
+    // Hitung rata-rata stats
     const totalStats = data.stats.reduce(
       (sum, stat) => sum + stat.base_stat,
       0
     );
-    const averageStats = totalStats / data.stats.length;
+    const averageStats = (totalStats / data.stats.length).toFixed(2);
 
+    // Siapkan objek Pokémon sesuai response backend
     pokemon.value = {
-      id: data.id,
-      name: data.name.charAt(0).toUpperCase() + data.name.slice(1),
-      image:
-        data.sprites.other["official-artwork"].front_default || "/default.png",
-      types: data.types.map((t) => t.type.name),
-      height: `${data.height / 10} m`,
-      weight: `${data.weight / 10} kg`,
-      abilities: data.abilities.map((a) => a.ability.name),
-      experience: data.base_experience,
-      moves: data.moves,
-      stats: data.stats,
-      averageStats: averageStats.toFixed(2),
+      id: data.pokeId, // pastikan di backend field-nya bernama 'pokeId'
+      name: capitalize(data.name),
+      image: data.image || "/default.png",
+      types: data.types, // misalnya array string: ["grass", "poison"]
+      height: data.height, // misalnya "0.7m"
+      weight: data.weight, // misalnya "6.9kg"
+      abilities: data.abilities, // misalnya array string
+      experience: data.experience,
+      moves: data.moves, // misalnya array objek { move: { name: "razor-wind" } }
+      stats: data.stats, // misalnya array objek dengan base_stat dan stat.name
+      averageStats,
+      caught: data.caught,
+      caughtAt: data.caughtAt,
     };
+
+    // Simpan data response di localStorage
+    localStorage.setItem("pokemonDetail", JSON.stringify(pokemon.value));
   } catch (error) {
     errorMessage.value = "Error fetching Pokémon data.";
   } finally {
@@ -50,35 +65,44 @@ const fetchPokemonDetail = async () => {
 };
 
 // Catch Pokemon logic
-const catchPokemon = () => {
-  if (!pokemon.value || isCatching.value) return;
+const catchPokemon = async () => {
+  if (!pokemon.value || isCatching.value || pokemon.value.caught) return;
 
   isCatching.value = true;
   caughtMessage.value = null;
 
-  setTimeout(() => {
+  setTimeout(async () => {
     const success = Math.random() > 0.5;
+
     if (success) {
-      if (!capturedPokemon.some((p) => p.id === pokemon.value.id)) {
-        const newPokemon = {
-          id: pokemon.value.id,
-          name: pokemon.value.name,
-          types: pokemon.value.types,
-          image: pokemon.value.image,
-          uniqueId: Date.now(),
-        };
+      try {
+        const res = await fetch(
+          `http://localhost:5000/pokemons/${route.params.id}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              caught: true,
+              caughtAt: new Date().toISOString(),
+            }),
+          }
+        );
 
-        capturedPokemon.push(newPokemon);
-        localStorage.setItem("pokemonList", JSON.stringify(capturedPokemon));
-        window.dispatchEvent(new Event("storage")); // Notify Navbar of changes
+        if (!res.ok) throw new Error("Failed updating Pokémon status");
 
-        caughtMessage.value = { success: true, pokemon: newPokemon };
-      } else {
+        pokemon.value.caught = true;
         caughtMessage.value = { success: true, pokemon: pokemon.value };
+        toast.success(`You caught ${pokemon.value.name}!`);
+      } catch (error) {
+        toast.error("Failed to update Pokémon status.");
       }
     } else {
       caughtMessage.value = { success: false };
+      toast.error("It escaped!");
     }
+
     isCatching.value = false;
   }, 2000);
 };
@@ -87,7 +111,7 @@ const closeMessage = () => {
   caughtMessage.value = null;
 };
 
-watch(() => route.params.name, fetchPokemonDetail, { immediate: true });
+watch(() => route.params.id, fetchPokemonDetail, { immediate: true });
 </script>
 
 <template>
@@ -105,11 +129,11 @@ watch(() => route.params.name, fetchPokemonDetail, { immediate: true });
     >
       {{ errorMessage }}
     </div>
-
     <div
       v-else
       class="bg-primary rounded-2xl shadow-lg p-6 max-w-3xl w-full flex flex-col md:flex-row"
     >
+      <!-- Bagian Detail Pokémon -->
       <div class="flex flex-col items-center text-center md:w-1/2">
         <img
           :src="pokemon.image"
@@ -120,63 +144,26 @@ watch(() => route.params.name, fetchPokemonDetail, { immediate: true });
           #{{ pokemon.id }} {{ pokemon.name }}
         </h1>
         <button
-          :disabled="isCatching"
+          :disabled="isCatching "
           @click="catchPokemon"
-          class="btn mt-4 bg-blue-600 font-bold text-teks py-2 px-5 rounded-lg shadow-md hover:bg-blue-700 transition flex items-center gap-2"
+          class="btn mt-4 font-bold text-teks py-2 px-5 rounded-lg shadow-md transition flex items-center gap-2"
           :class="{
-            'bg-blue-600  px-5 cursor-not-allowed': isCatching,
+            'bg-green-700 hover:bg-green-800': pokemon.caught,
+            'bg-blue-600 hover:bg-blue-700': !pokemon.caught,
+            'cursor-not-allowed ': isCatching ,
           }"
         >
-          <img src="/icon.png" class="animate-bounce w-8 h-8" alt="" />
-          {{ isCatching ? "Catching..." : `Catch ${pokemon.name}` }}
+          {{
+            isCatching
+              ? "Catching..."
+              : pokemon.caught
+              ? `You already caught ${pokemon.name}`
+              : `Catch ${pokemon.name}`
+          }}
         </button>
       </div>
 
-      <!-- Catch Result Modal -->
-      <div
-        v-if="caughtMessage"
-        class="fixed inset-0 flex items-center justify-center bg-secondary bg-opacity-50 animate-fadeIn"
-      >
-        <div
-          class="bg-secondary p-6 rounded-lg shadow-lg text-center w-96 relative"
-        >
-          <button
-            @click="closeMessage"
-            class="absolute top-2 right-2 text-teks hover:text-gray-700"
-          >
-            ✖
-          </button>
-          <div v-if="caughtMessage.success" class="animate-fadeIn">
-            <h2 class="text-xl font-semibold text-blue-600">
-              You get a {{ caughtMessage.pokemon.name }}!
-            </h2>
-            <img
-              :src="caughtMessage.pokemon.image"
-              alt="Pokemon"
-              class="w-32 mx-auto my-2"
-            />
-            <p class="text-teks">
-              Type: {{ caughtMessage.pokemon.types.join(", ") }}
-            </p>
-            <h2 class="text-lg font-semibold text-slate-400">
-              Avarage stats {{ pokemon.averageStats }}
-            </h2>
-          </div>
-          <div v-else class="animate-fadeIn">
-            <h2 class="text-xl font-semibold text-red-600">
-              Your pokemon runs away!...
-            </h2>
-          </div>
-          <button
-            @click="closeMessage"
-            class="mt-4 px-4 py-2 bg-red-400 rounded hover:bg-red-600 text-slate-800 font-semibold"
-          >
-            Close
-          </button>
-        </div>
-      </div>
-
-      <!-- Pokemon Info Tabs -->
+      <!-- Bagian Info Pokémon -->
       <div class="md:w-1/2 p-4">
         <div class="flex gap-2">
           <button
@@ -202,7 +189,7 @@ watch(() => route.params.name, fetchPokemonDetail, { immediate: true });
           </button>
         </div>
 
-        <!-- About -->
+        <!-- Tab About -->
         <div v-if="activeTab === 'about'" class="mt-8 space-y-4">
           <p class="text-teks">
             <strong>Types:</strong>
@@ -216,19 +203,14 @@ watch(() => route.params.name, fetchPokemonDetail, { immediate: true });
           <p class="text-teks"><strong>Height:</strong> {{ pokemon.height }}</p>
           <p class="text-teks"><strong>Weight:</strong> {{ pokemon.weight }}</p>
           <p class="text-teks">
-            <strong>Abilities:</strong>
-            <span
-              v-for="ability in pokemon.abilities"
-              :key="ability"
-              class="px-2 py-1 text-teks bg-blue-600 rounded-full mx-1 text-sm capitalize"
-              >{{ ability }}</span
-            >
+            <strong>Abilities:</strong> {{ pokemon.abilities.join(", ") }}
           </p>
           <p class="text-teks">
             <strong>Experience:</strong> {{ pokemon.experience }} Exp
           </p>
         </div>
-        <!--Moves-->
+
+        <!-- Tab Moves -->
         <div v-if="activeTab === 'moves'" class="mt-4 space-y-4">
           <div
             class="grid grid-cols-2 max-h-[300px] overflow-y-auto p-2 md:grid-cols-3 gap-4"
@@ -242,7 +224,8 @@ watch(() => route.params.name, fetchPokemonDetail, { immediate: true });
             </span>
           </div>
         </div>
-        <!--Stats-->
+
+        <!-- Tab Stats -->
         <div v-if="activeTab === 'stats'" class="mt-4 space-y-2">
           <div v-for="stat in pokemon.stats" :key="stat.stat.name">
             <p class="text-teks font-semibold">

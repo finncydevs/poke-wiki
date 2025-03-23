@@ -4,26 +4,20 @@ import { useRouter } from "vue-router";
 
 const pokemonList = ref([]);
 const showCount = ref(15);
-const totalPokemon = ref(1025);
 const router = useRouter();
 const query = ref("");
 
 const fetchPokemon = async () => {
   try {
-    const promises = Array.from({ length: totalPokemon.value }, (_, i) =>
-      fetch(`https://pokeapi.co/api/v2/pokemon/${i + 1}`).then((res) =>
-        res.json()
-      )
-    );
+    const res = await fetch("http://localhost:5000/pokemons");
+    if (!res.ok) throw new Error("Failed fetching data");
 
-    const results = await Promise.allSettled(promises);
-    pokemonList.value = results
-      .filter((result) => result.status === "fulfilled")
-      .map((result) => ({
-        id: result.value.id,
-        name: result.value.name,
-        image: result.value.sprites.other["official-artwork"].front_default,
-      }));
+    const data = await res.json();
+    pokemonList.value = data.map((pokemon) => ({
+      id: pokemon.pokeId,
+      name: pokemon.name,
+      image: pokemon.image || "/default.png",
+    }));
   } catch (error) {
     console.error("Error fetching data:", error);
   }
@@ -32,9 +26,7 @@ const fetchPokemon = async () => {
 onMounted(fetchPokemon);
 
 const showMore = () => {
-  if (showCount.value < totalPokemon.value) {
-    showCount.value += 5;
-  }
+  showCount.value += 5;
 };
 
 const filteredPokemon = computed(() => {
@@ -58,7 +50,7 @@ const filteredPokemon = computed(() => {
 
   <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
     <div
-      @click="router.push(`/pokemon/${pokemon.name}`)"
+      @click="router.push(`/pokemon/${pokemon.id}`)"
       v-for="pokemon in filteredPokemon"
       :key="pokemon.id"
       class="relative bg-primary hover:ring-4 transition ease-in-out hover:-translate-y-2 shadow-lg rounded-xl p-4 flex flex-col items-center"
@@ -88,7 +80,7 @@ const filteredPokemon = computed(() => {
   <footer class="flex flex-col items-center justify-center py-4">
     <button
       @click="showMore"
-      :disabled="showCount >= totalPokemon"
+      :disabled="showCount >= pokemonList.length"
       class="bg-secondary rounded-lg py-2 px-4 text-xl font-semibold text-teks hover:bg-gray-900 transition disabled:opacity-50 disabled:cursor-not-allowed"
     >
       Show more..
