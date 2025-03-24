@@ -37,18 +37,17 @@ const confirmDelete = (pokemon) => {
   dialogRef.value.showModal();
 };
 
-
-
 // Fungsi untuk me-release Pokémon (menghapus data di backend)
 const deletePokemon = async () => {
   if (!selectedPokemon.value) return;
   try {
     const res = await fetch(
-      `http://localhost:5000/pokemons/${selectedPokemon.value.pokeId}`,
+      `https://nest-pokemon-mongo.up.railway.app/pokemons/${selectedPokemon.value.pokeId}`,
       {
         method: "DELETE",
       }
     );
+
     if (!res.ok) throw new Error("Failed to release Pokémon");
     toast.success(`Released ${selectedPokemon.value.name}`);
     fetchCaughtPokemon();
