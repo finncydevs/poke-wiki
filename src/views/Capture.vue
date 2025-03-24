@@ -32,7 +32,6 @@ onMounted(() => {
   fetchCaughtPokemon();
 });
 
-// Fungsi untuk memunculkan modal release
 const confirmDelete = (pokemon) => {
   selectedPokemon.value = pokemon;
   dialogRef.value.showModal();
@@ -45,7 +44,7 @@ const deletePokemon = async () => {
   if (!selectedPokemon.value) return;
   try {
     const res = await fetch(
-      `https://nest-pokemon-mongo.up.railway.app/${selectedPokemon.value.pokeId}`,
+      `http://localhost:5000/pokemons/${selectedPokemon.value.pokeId}`,
       {
         method: "DELETE",
       }
